@@ -26,11 +26,6 @@ export const fetchBannerAction = () => async (dispatch) => {
     type: actionTypes.FETCH_BANNERS,
     payload: banners.data,
   });
-  // return {
-  //   type: actionTypes.FETCH_BANNERS,
-  //   payload: banners.data
-  // }
-  // console.log("banners",banners);
 };
 export const signUpAction = (user) => async (dispatch) => {
   console.log("signUpAction");

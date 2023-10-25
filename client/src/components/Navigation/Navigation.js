@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
@@ -8,18 +8,34 @@ import "./Navigation.scss";
 import { cartTotalItemsSelect } from "../../Selectors/Cart.selector";
 import { logoutAction } from "../../Action";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useDebounce } from "../customHooks/useDebounce";
+import { SearchBarContext } from "../../contexts/searchBarContext";
+import InputSearch from "./InputSearch";
 
 // const cartStore = (state) => state.cartItems.cartItems;
 
 function Navigation() {
   const history = useHistory();
+  console.log("history", history);
   // const cartSelect = useSelector(cartStore);
   const cartTotalItems = useSelector(cartTotalItemsSelect);
   const auth = useSelector((state) => state.auth);
   const [openSidebar, setOpenSidebar] = useState(false);
-  console.log("Nav auth", auth);
+  const [showSearchBar, setShowSearchBar] = useState(false);
+
+  const { query, setQuery } = useContext(SearchBarContext);
   const cartRef = useRef();
   const dispatch = useDispatch();
+  useEffect(() => {
+    // Only when user will be on products page search bar will appear
+    history.listen(() => {
+      history.location.pathname.includes("/products")
+        ? //  ||
+          // history.location.pathname.includes("/products/")
+          setShowSearchBar(true)
+        : setShowSearchBar(false);
+    });
+  });
   function toggleSidebar() {
     setOpenSidebar(!openSidebar);
     document.getElementsByTagName("BODY")[0].style.overflow = openSidebar
@@ -41,6 +57,13 @@ function Navigation() {
           <div className="menu">
             <Link to="/">Home</Link>
             <Link to="/products">Products</Link>
+            {showSearchBar && (
+              <InputSearch
+                query={query}
+                setQuery={setQuery}
+                className="input-search"
+              />
+            )}
           </div>
           <div className="ms-auto d-flex flex-column">
             {auth.token ? (
