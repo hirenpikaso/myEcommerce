@@ -481,6 +481,38 @@ app.get("/products/:id", (req, res) => {
     res.status(404).json({ message: "Item not found" });
   }
 });
+app.get("/search", (req, res) => {
+  const name = req.query.name.toLowerCase(); // Access the 'id' parameter from the URL
+  // const categoryId = req.query.categoryId;
+  console.log("name", name);
+  // console.log("categoryId", categoryId);
+  const findbyName = products.filter((prd) =>
+    prd.name.toLowerCase().includes(name)
+  );
+  // const findbyCategoryId = findbyName.filter(
+  //   (prd) => prd.categoryId == categoryId
+  // );
+  console.log("findbyName", findbyName);
+  // console.log("findbyCategoryId", findbyCategoryId);
+  res.send(findbyName.length === 0 ? [] : findbyName);
+  // if (!categoryId) {
+  //   res.send(
+  //     findbyName.length === 0
+  //       ? []
+  //       : // : findbyCategoryId
+  //         // ? findbyCategoryId
+  //         findbyName
+  //   );
+  // } else {
+  //   res.send(
+  //     findbyCategoryId.length === 0
+  //       ? []
+  //       : // : findbyCategoryId
+  //         // ? findbyCategoryId
+  //         findbyCategoryId
+  //   );
+  // }
+});
 
 app.get("/categories", (req, res) => {
   res.json(categories);
